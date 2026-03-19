@@ -1,0 +1,36 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@gymnastics-manager/athletes-data-access": [
+        "libs/athletes/data-access/src/index.ts"
+      ],
+      "@gymnastics-manager/athletes-feature": [
+        "libs/athletes/feature/src/index.ts"
+      ],
+      "@gymnastics-manager/athletes-ui": ["libs/athletes/ui/src/index.ts"],
+      "@gymnastics-manager/scoring-data-access": [
+        "libs/scoring/data-access/src/index.ts"
+      ],
+      "@gymnastics-manager/scoring-feature": [
+        "libs/scoring/feature/src/index.ts"
+      ],
+      "@gymnastics-manager/shared-ui": ["libs/shared/ui/src/index.ts"],
+      "@gymnastics-manager/shared-util": ["libs/shared/util/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
