@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Athletes } from './athletes';
+import { AthleteService } from './athletes';
 import { MOCK_ATHLETES } from '@gymnastics-manager/shared-util';
 
 describe('Athletes', () => {
-  let service: Athletes;
+  let service: AthleteService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Athletes);
+    service = TestBed.inject(AthleteService);
   });
 
   it('should be created', () => {

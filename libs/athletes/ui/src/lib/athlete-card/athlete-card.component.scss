@@ -1,0 +1,77 @@
+// libs/athletes/ui/src/lib/athlete-card/athlete-card.component.scss
+
+.athlete-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+
+  &:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  }
+
+  &--selected {
+    border-color: #4f46e5;
+    background: #eef2ff;
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+
+    span {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111;
+  }
+
+  &__country {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    width: fit-content;
+
+    &--senior  { background: #dbeafe; color: #1d4ed8; }
+    &--junior  { background: #fef9c3; color: #854d0e; }
+    &--male    { background: #dcfce7; color: #166534; }
+    &--female  { background: #fce7f3; color: #9d174d; }
+  }
+}

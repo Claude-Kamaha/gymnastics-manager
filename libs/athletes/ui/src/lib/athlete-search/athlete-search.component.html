@@ -1,0 +1,20 @@
+<!-- libs/athletes/ui/src/lib/athlete-search/athlete-search.component.html -->
+
+<div class="search-bar">
+  <span class="search-bar__icon">🔍</span>
+  <input
+    class="search-bar__input"
+    type="text"
+    [placeholder]="placeholder"
+    [(ngModel)]="value"
+    (ngModelChange)="onInput($event)"
+  />
+  @if(value){
+  <button
+    class="search-bar__clear"
+    (click)="onClear()"
+  >
+    ✕
+  </button>
+}
+</div>

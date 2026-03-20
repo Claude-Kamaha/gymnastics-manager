@@ -1,0 +1,42 @@
+// libs/athletes/ui/src/lib/athlete-search/athlete-search.component.scss
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  }
+
+  &__icon { font-size: 0.875rem; color: #9ca3af; }
+
+  &__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+    color: #111;
+    background: transparent;
+
+    &::placeholder { color: #9ca3af; }
+  }
+
+  &__clear {
+    border: none;
+    background: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0;
+
+    &:hover { color: #374151; }
+  }
+}

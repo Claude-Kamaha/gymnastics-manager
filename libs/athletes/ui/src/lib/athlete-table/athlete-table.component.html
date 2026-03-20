@@ -1,0 +1,53 @@
+<!-- libs/athletes/ui/src/lib/athlete-table/athlete-table.component.html -->
+
+<div class="athlete-table-wrapper">
+  <table class="athlete-table">
+    <thead>
+      <tr>
+        <th>Athlete</th>
+        <th>Country</th>
+        <th>Category</th>
+        <th>Gender</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        @for( athlete of athletes; track trackById($index, athlete)){
+      <tr
+       
+        class="athlete-table__row"
+        [class.athlete-table__row--selected]="athlete.id === selectedAthleteId"
+        (click)="onSelect(athlete)"
+      >
+        <td class="athlete-table__name">{{ getFullName(athlete) }}</td>
+        <td>{{ athlete.country }}</td>
+        <td>
+          <span class="badge badge--{{ athlete.category }}">
+            {{ athlete.category }}
+          </span>
+        </td>
+        <td>
+          <span class="badge badge--{{ athlete.gender }}">
+            {{ athlete.gender }}
+          </span>
+        </td>
+        <td>
+          <button
+            class="btn-remove"
+            (click)="onRemove($event, athlete.id)"
+          >
+            Remove
+          </button>
+        </td>
+      </tr>
+    }
+@if(athletes.length === 0){
+      <tr>
+        <td colspan="5" class="athlete-table__empty">
+          No athletes found.
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>

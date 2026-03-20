@@ -12,6 +12,6 @@ export interface Athlete {
   avatarUrl?: string;
 }
 
-export function getFullname(athlete:Athlete): string {
+export function getFullName(athlete:Athlete): string {
   return `${athlete.firstName} ${athlete.lastName}`;
 }

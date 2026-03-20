@@ -1,0 +1,58 @@
+<!-- libs/athletes/feature/src/lib/athlete-list/athlete-list.component.html -->
+
+<div class="athlete-list">
+
+  <!-- Header -->
+  <div class="athlete-list__header">
+    <h2 class="athlete-list__title">Athletes</h2>
+    <button class="btn btn--secondary" (click)="onToggleViewMode()">
+      {{ viewModeLabel() }}
+    </button>
+  </div>
+
+  <!-- Search -->
+  <lib-gym-athlete-search
+    [value]="searchTerm()"
+    placeholder="Search by name, country or category..."
+    (searched)="onSearch($event)"
+  />
+
+  <!-- Selected athlete banner -->
+  @if (hasSelection()) {
+    <div class="athlete-list__selection">
+      <span>
+        Selected: <strong>{{ selectedAthlete()?.firstName }}
+        {{ selectedAthlete()?.lastName }}</strong>
+      </span>
+      <button class="btn btn--ghost" (click)="onClearSelection()">
+        Clear
+      </button>
+    </div>
+  }
+
+  <!-- Athletes — card view -->
+  @if (viewMode() === 'card') {
+    <div class="athlete-list__grid">
+      @for (athlete of athletes$ | async; track athlete.id) {
+        <lib-gym-athlete-card
+          [athlete]="athlete"
+          [isSelected]="athlete.id === selectedAthlete()?.id"
+          (selected)="onAthleteSelected($event)"
+        />
+      } @empty {
+        <p class="athlete-list__empty">No athletes found.</p>
+      }
+    </div>
+  }
+
+  <!-- Athletes — table view -->
+  @if (viewMode() === 'table') {
+    <lib-gym-athlete-table
+      [athletes]="(athletes$ | async) ?? []"
+      [selectedAthleteId]="selectedAthlete()?.id ?? null"
+      (athleteSelected)="onAthleteSelected($event)"
+      (athleteRemoved)="onAthleteRemoved($event)"
+    />
+  }
+
+</div>

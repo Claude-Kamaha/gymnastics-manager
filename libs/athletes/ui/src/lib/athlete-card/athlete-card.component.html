@@ -1,0 +1,29 @@
+<!-- libs/athletes/ui/src/lib/athlete-card/athlete-card.component.html -->
+
+<div
+  class="athlete-card"
+  [class.athlete-card--selected]="isSelected"
+  (click)="onSelect()"
+>
+  <div class="athlete-card__avatar">
+  @if (athlete.avatarUrl) {
+  <img
+    [src]="athlete.avatarUrl"
+    [alt]="getFullName(athlete)"
+  />
+} @else {
+  <span>{{ athlete.firstName[0] }}{{ athlete.lastName[0] }}</span>
+}
+  </div>
+
+  <div class="athlete-card__info">
+    <h3 class="athlete-card__name">{{ getFullName(athlete) }}</h3>
+    <span class="athlete-card__country">{{ athlete.country }}</span>
+    <span class="athlete-card__badge athlete-card__badge--{{ athlete.category }}">
+      {{ athlete.category }}
+    </span>
+    <span class="athlete-card__badge athlete-card__badge--{{ athlete.gender }}">
+      {{ athlete.gender }}
+    </span>
+  </div>
+</div>
