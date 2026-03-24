@@ -1,71 +1,70 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, combineLatest, debounce, debounceTime, distinctUntilChanged, map, Observable, of, retry, switchMap } from 'rxjs';
-import { Athlete, MOCK_ATHLETES } from '@gymnastics-manager/shared-util';
-@Injectable({
-  providedIn: 'root',
-})
-export class AthleteService {
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  catchError,
+  map,
+} from 'rxjs/operators';
+import { Athlete, ScoreBridgeService } from '@gymnastics-manager/shared-util';
 
-  private athletesSource$ = new BehaviorSubject<Athlete[]>(MOCK_ATHLETES);
+@Injectable({ providedIn: 'root' })
+export class AthleteService {
+  private bridgeService = inject(ScoreBridgeService);
   private searchTerm$ = new BehaviorSubject<string>('');
   private selectedAthleteId$ = new BehaviorSubject<string | null>(null);
 
-  allAthletes$ = this.athletesSource$.asObservable()
+  // ─── Streams from Firestore ───────────────────────────────────────────
+
+  allAthletes$ = this.bridgeService.athletes$;
+
   filteredAthletes$: Observable<Athlete[]> = combineLatest([
-    this.athletesSource$,
-    this.searchTerm$.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ),
+    this.bridgeService.athletes$,
+    this.searchTerm$.pipe(debounceTime(300), distinctUntilChanged()),
   ]).pipe(
-    switchMap(([athletes, term]) =>
-      this.filterAthletes(athletes, term)
-    ),
+    switchMap(([athletes, term]) => this.filterAthletes(athletes, term)),
     catchError(() => of([])),
-    retry(2)
   );
 
-
-  /** Currently selected athlete as a full object */
   selectedAthlete$: Observable<Athlete | null> = combineLatest([
-    this.athletesSource$,
+    this.bridgeService.athletes$,
     this.selectedAthleteId$,
   ]).pipe(
     map(([athletes, id]) =>
-      id ? (athletes.find((a) => a.id === id) ?? null) : null
-    )
+      id ? (athletes.find((a) => a.id === id) ?? null) : null,
+    ),
   );
 
-  search(term: string) {
+  // ─── Actions ──────────────────────────────────────────────────────────
+
+  search(term: string): void {
     this.searchTerm$.next(term);
   }
+
   selectAthlete(id: string | null): void {
     this.selectedAthleteId$.next(id);
   }
 
-  addAthlete(athlete: Athlete) {
-    const currentAthletes = this.athletesSource$.value;
-    this.athletesSource$.next([...currentAthletes, athlete]);
+  async addAthlete(athlete: Athlete): Promise<void> {
+    await this.bridgeService.publishAthlete(athlete);
   }
 
-  updateAthlete(updated: Athlete) {
-    const current = this.athletesSource$.getValue();
-    this.athletesSource$.next(current.map((athlete) => athlete.id === updated.id ? updated : athlete));
-
+  async updateAthlete(athlete: Athlete): Promise<void> {
+    await this.bridgeService.publishAthlete(athlete);
   }
 
-  removeAthlete(id: string) {
-    const current = this.athletesSource$.getValue();
-    this.athletesSource$.next(current.filter(athlete => athlete.id !== id))
+  async removeAthlete(id: string): Promise<void> {
+    await this.bridgeService.deleteAthlete(id);
   }
 
+  // ─── Private ──────────────────────────────────────────────────────────
 
   private filterAthletes(
     athletes: Athlete[],
-    term: string
+    term: string,
   ): Observable<Athlete[]> {
     if (!term.trim()) return of(athletes);
-
     const lower = term.toLowerCase();
     return of(
       athletes.filter(
@@ -73,9 +72,8 @@ export class AthleteService {
           a.firstName.toLowerCase().includes(lower) ||
           a.lastName.toLowerCase().includes(lower) ||
           a.country.toLowerCase().includes(lower) ||
-          a.category.toLowerCase().includes(lower)
-      )
+          a.category.toLowerCase().includes(lower),
+      ),
     );
   }
-
 }

@@ -1,13 +1,15 @@
 <!-- libs/athletes/feature/src/lib/athlete-list/athlete-list.component.html -->
 
 <div class="athlete-list">
-
   <!-- Header -->
   <div class="athlete-list__header">
     <h2 class="athlete-list__title">Athletes</h2>
     <button class="btn btn--secondary" (click)="onToggleViewMode()">
       {{ viewModeLabel() }}
     </button>
+    <!-- <button class="btn btn--secondary" (click)="onAddAthlete()">
+      Add Athlete
+    </button> -->
   </div>
 
   <!-- Search -->
@@ -21,12 +23,13 @@
   @if (hasSelection()) {
     <div class="athlete-list__selection">
       <span>
-        Selected: <strong>{{ selectedAthlete()?.firstName }}
-        {{ selectedAthlete()?.lastName }}</strong>
+        Selected:
+        <strong
+          >{{ selectedAthlete()?.firstName }}
+          {{ selectedAthlete()?.lastName }}</strong
+        >
       </span>
-      <button class="btn btn--ghost" (click)="onClearSelection()">
-        Clear
-      </button>
+      <button class="btn btn--ghost" (click)="onClearSelection()">Clear</button>
     </div>
   }
 
@@ -54,5 +57,4 @@
       (athleteRemoved)="onAthleteRemoved($event)"
     />
   }
-
 </div>

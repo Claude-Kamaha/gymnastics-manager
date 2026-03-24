@@ -11,12 +11,18 @@ import {
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Subject, take, takeUntil } from 'rxjs';
 
-import { ScoreService, ScoreSubmission } from '@gymnastics-manager/scoring-data-access';
+import {
+  ScoreService,
+  ScoreSubmission,
+} from '@gymnastics-manager/scoring-data-access';
 import { AthleteService } from '@gymnastics-manager/athletes-data-access';
 import { ScoreSubmitFormComponent } from '../score-submit-form/score-submit-form.component';
 import { ScoreLeaderboardComponent } from '../score-leaderboard/score-leaderboard.component';
 import { ScoreFeedComponent } from '../score-feed/score-feed.component';
-import { ScoreBridgeService } from '@gymnastics-manager/shared-util';
+import {
+  MOCK_ATHLETES,
+  ScoreBridgeService,
+} from '@gymnastics-manager/shared-util';
 
 @Component({
   selector: 'lib-gym-scoring-shell',
@@ -35,7 +41,7 @@ import { ScoreBridgeService } from '@gymnastics-manager/shared-util';
 export class ScoringShellComponent implements OnInit, OnDestroy {
   private scoreService = inject(ScoreService);
   private athleteService = inject(AthleteService);
-    private bridgeService = inject(ScoreBridgeService); // ← inject bridge
+  private bridgeService = inject(ScoreBridgeService); // ← inject bridge
 
   private destroy$ = new Subject<void>();
 
@@ -51,22 +57,18 @@ export class ScoringShellComponent implements OnInit, OnDestroy {
   // ─── Lifecycle ────────────────────────────────────────────────────────
 
   ngOnInit(): void {
-       
-
     // Feed athletes into score service
     // this.athleteService.allAthletes$
-    //  .pipe(take(1))    
+    //  .pipe(take(1))
     //   .subscribe((athletes) => this.scoreService.setAthletes(athletes));
 
-        // Keep athletes in sync when list changes
-  this.athleteService.allAthletes$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((athletes) => this.scoreService.setAthletes(athletes));
+    // Keep athletes in sync when list changes
+    this.athleteService.allAthletes$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((athletes) => this.scoreService.setAthletes(athletes));
 
     // Subscribe to live stream to keep it active
-    this.scoreService.liveStream$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+    this.scoreService.liveStream$.pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -76,7 +78,11 @@ export class ScoringShellComponent implements OnInit, OnDestroy {
   }
 
   // ─── Actions ──────────────────────────────────────────────────────────
-
+  async onSeedAthletes(): Promise<void> {
+    console.log('🌱 Seeding athletes...');
+    await this.bridgeService.seedAthletes(MOCK_ATHLETES);
+    console.log('✅ Seeding complete');
+  }
   onScoreSubmitted(submission: ScoreSubmission): void {
     this.isSubmitting.set(true);
     this.scoreService.submitScore(submission);
@@ -85,7 +91,9 @@ export class ScoringShellComponent implements OnInit, OnDestroy {
 
   onToggleLive(): void {
     this.isLive.update((live) => !live);
-    this.isLive() ? this.scoreService.startLiveStream() : this.scoreService.stopLiveStream();
+    this.isLive()
+      ? this.scoreService.startLiveStream()
+      : this.scoreService.stopLiveStream();
   }
 
   onResetScores(): void {

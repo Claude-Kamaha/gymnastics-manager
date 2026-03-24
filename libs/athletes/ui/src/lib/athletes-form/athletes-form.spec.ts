@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AthletesUi } from './athletes-ui';
+import { AthletesUi } from './athletes-form';
 
 describe('AthletesUi', () => {
   let component: AthletesUi;

@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "gymnastics-manager"
+  },
+  "targets": {
+    "gymnastics-manager": {
+      "hosting": {
+        "admin": [
+          "gymnastics-manager-admin"
+        ],
+        "scoreboard": [
+          "gymnastics-manager-scoreboard"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

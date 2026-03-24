@@ -51,7 +51,7 @@ export class AthleteListComponent implements OnInit, OnDestroy {
 
   /** Computed — label for view toggle button */
   viewModeLabel = computed(() =>
-    this.viewMode() === 'card' ? 'Switch to Table' : 'Switch to Cards'
+    this.viewMode() === 'card' ? 'Switch to Table' : 'Switch to Cards',
   );
 
   /** Computed — is an athlete currently selected */
@@ -101,4 +101,7 @@ export class AthleteListComponent implements OnInit, OnDestroy {
   onClearSelection(): void {
     this.athleteService.selectAthlete(null);
   }
+  // onAddAthlete(): void {
+  //   this.athleteService.addAthlete();
+  // }
 }

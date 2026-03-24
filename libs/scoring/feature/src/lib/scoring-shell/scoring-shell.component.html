@@ -1,7 +1,6 @@
 <!-- libs/scoring/feature/src/lib/scoring-shell/scoring-shell.component.html -->
 
 <div class="scoring-shell">
-
   <!-- Header -->
   <div class="scoring-shell__header">
     <h2 class="scoring-shell__title">Scoring</h2>
@@ -17,6 +16,9 @@
       <button class="btn btn--ghost" (click)="onResetScores()">
         Reset Scores
       </button>
+      <button class="btn btn--ghost" (click)="onSeedAthletes()">
+        Seed Athletes
+      </button>
     </div>
   </div>
 
@@ -29,7 +31,6 @@
 
   <!-- Main layout -->
   <div class="scoring-shell__grid">
-
     <!-- Submit form -->
     <lib-gym-score-submit-form
       [athletes]="(athletes$ | async) ?? []"
@@ -38,15 +39,12 @@
     />
 
     <!-- Leaderboard -->
-    <lib-gym-score-leaderboard
-      [entries]="(leaderboard$ | async) ?? []"
-    />
+    <lib-gym-score-leaderboard [entries]="(leaderboard$ | async) ?? []" />
 
     <!-- Live feed -->
     <lib-gym-score-feed
       [scores]="(scoreFeed$ | async) ?? []"
       [athletes]="(athletes$ | async) ?? []"
     />
-
   </div>
 </div>
