@@ -1,0 +1,54 @@
+<div class="score-form">
+  <h3 class="score-form__title">Submit Score</h3>
+
+  <div class="score-form__field">
+    <label class="score-form__label" for="athleteSelect">Athlete</label>
+    <select
+      id="athleteSelect"
+      class="score-form__select"
+      [(ngModel)]="form.athleteId"
+    >
+      <option value="" disabled>Select athlete...</option>
+      @for (athlete of athletes; track athlete.id) {
+        <option [value]="athlete.id">
+          {{ athlete.firstName }} {{ athlete.lastName }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="score-form__field">
+    <label class="score-form__label" for="scoreValue">Score (0 - 10)</label>
+    <input
+      id="scoreValue"
+      class="score-form__input"
+      type="number"
+      min="0"
+      max="10"
+      step="0.1"
+      [(ngModel)]="form.value"
+      placeholder="e.g. 9.5"
+    />
+  </div>
+
+  <div class="score-form__field">
+    <label class="score-form__label" for="scoreType">Score Type</label>
+    <select
+      id="scoreType"
+      class="score-form__select"
+      [(ngModel)]="form.type"
+    >
+      @for (type of scoreTypes; track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+  </div>
+
+  <button
+    class="score-form__btn"
+    [disabled]="isSubmitting || !form.athleteId || !form.value"
+    (click)="onSubmit()"
+  >
+    @if (isSubmitting) { Submitting... } @else { Submit Score }
+  </button>
+</div>

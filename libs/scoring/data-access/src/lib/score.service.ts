@@ -1,6 +1,6 @@
 // libs/scoring/data-access/src/lib/score.service.ts
 
-import { Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 import {
     BehaviorSubject,
     Observable,
@@ -24,7 +24,8 @@ import {
 import {
     Score,
     Athlete,
-    calcAverage,
+    calcAverageScore,
+    ScoreBridgeService,
 } from '@gymnastics-manager/shared-util';
 
 export interface LiveScoreEntry {
@@ -45,7 +46,7 @@ export interface ScoreSubmission {
 @Injectable({ providedIn: 'root' })
 export class ScoreService implements OnDestroy {
     private destroy$ = new Subject<void>();
-
+private bridgeService = inject(ScoreBridgeService);
     // ─── Private state streams ────────────────────────────────────────────
 
     /** All submitted scores */
@@ -61,6 +62,18 @@ export class ScoreService implements OnDestroy {
 
     /** All scores as read-only stream */
     allScores$: Observable<Score[]> = this.scoresSource$.asObservable();
+
+  constructor() {
+      console.log('🔧 ScoreService initialized'); // ← add this
+
+    // Publish scores to bridge whenever they change
+   this.scoresSource$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((scores) => {
+      console.log('🔄 Scores changed, publishing:', scores); // ← add this
+      this.bridgeService.publishScores(scores);
+    });
+  }
 
     /**
      * Live score simulation — emits a random score every 3 seconds
@@ -82,13 +95,14 @@ export class ScoreService implements OnDestroy {
         takeUntil(this.destroy$)
     );
 
+
     /**
      * Leaderboard — combines athletes + scores into ranked entries
      * Auto-updates whenever either stream changes
      */
     leaderboard$: Observable<LiveScoreEntry[]> = combineLatest([
-        this.athletesSource$,
-        this.scoresSource$,
+        this.athletesSource$.pipe(startWith([])),
+        this.scoresSource$.pipe(startWith([])),
     ]).pipe(
         map(([athletes, scores]) =>
             athletes
@@ -99,7 +113,7 @@ export class ScoreService implements OnDestroy {
                     return {
                         athlete,
                         scores: athleteScores,
-                        average: calcAverage(athleteScores),
+                        average: calcAverageScore(athleteScores),
                         latest: athleteScores.length
                             ? athleteScores[athleteScores.length - 1].value
                             : null,
@@ -125,6 +139,8 @@ export class ScoreService implements OnDestroy {
     /** Feed athletes into the service from outside */
     setAthletes(athletes: Athlete[]): void {
         this.athletesSource$.next(athletes);
+        this.bridgeService.publishAthletes(athletes); // ← add this
+
     }
 
     /** Manually submit a score (from the judge form) */
@@ -166,8 +182,27 @@ export class ScoreService implements OnDestroy {
     // ─── Private helpers ──────────────────────────────────────────────────
 
     private addScoreToSource(score: Score): void {
-        const current = this.scoresSource$.getValue();
-        this.scoresSource$.next([...current, score]);
+        // const current = this.scoresSource$.getValue();
+        // this.scoresSource$.next([...current, score]);
+          const current = this.scoresSource$.getValue();
+
+  // Check if a score already exists for this athlete + type combination
+  const existingIndex = current.findIndex(
+    (s) =>
+      s.athleteId === score.athleteId &&
+      s.type === score.type
+  );
+
+  if (existingIndex !== -1) {
+    // ✅ Update existing score instead of adding a new one
+    const updated = [...current];
+    updated[existingIndex] = score;
+    this.scoresSource$.next(updated);
+  } else {
+    // ✅ No score yet for this type — add it
+    this.scoresSource$.next([...current, score]);
+  }
+
     }
 
     private generateRandomScore(): Score | null {

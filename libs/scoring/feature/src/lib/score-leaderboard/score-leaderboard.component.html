@@ -1,0 +1,29 @@
+<!-- libs/scoring/feature/src/lib/score-leaderboard/score-leaderboard.component.html -->
+
+<div class="leaderboard">
+  <h3 class="leaderboard__title">🏆 Leaderboard</h3>
+
+  @if (entries.length === 0) {
+    <p class="leaderboard__empty">No scores yet. Submit or start live stream.</p>
+  }
+
+  @for (entry of entries; track entry.athlete.id; let i = $index) {
+    <div class="leaderboard__row" [class.leaderboard__row--top]="i < 3">
+      <span class="leaderboard__rank">{{ i + 1 }}</span>
+
+      <div class="leaderboard__info">
+        <span class="leaderboard__name">
+          {{ entry.athlete.firstName }} {{ entry.athlete.lastName }}
+        </span>
+        <span class="leaderboard__country">{{ entry.athlete.country }}</span>
+      </div>
+
+      <div class="leaderboard__scores">
+        <span class="leaderboard__average">{{ entry.average | number: '1.2-2' }}</span>
+        @if (entry.latest !== null) {
+          <span class="leaderboard__latest">Latest: {{ entry.latest }}</span>
+        }
+      </div>
+    </div>
+  }
+</div>

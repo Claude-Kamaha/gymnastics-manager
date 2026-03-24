@@ -1,0 +1,28 @@
+<!-- libs/scoring/feature/src/lib/score-feed/score-feed.component.html -->
+
+<div class="score-feed">
+  <h3 class="score-feed__title">📡 Live Feed</h3>
+
+  @if (scores.length === 0) {
+    <p class="score-feed__empty">Waiting for scores...</p>
+  }
+
+  @for (score of scores; track score.id) {
+    <div class="score-feed__entry">
+      <div class="score-feed__meta">
+        <span class="score-feed__athlete">
+          {{ getAthleteName(score.athleteId) }}
+        </span>
+        <span class="score-feed__type score-feed__type--{{ score.type }}">
+          {{ score.type }}
+        </span>
+      </div>
+      <div class="score-feed__right">
+        <span class="score-feed__value">{{ score.value | number: '1.1-2' }}</span>
+        <span class="score-feed__time">
+          {{ score.submittedAt | date: 'HH:mm:ss' }}
+        </span>
+      </div>
+    </div>
+  }
+</div>

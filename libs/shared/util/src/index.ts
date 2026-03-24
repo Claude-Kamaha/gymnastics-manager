@@ -5,3 +5,5 @@ export * from './lib/models/score.model';
 
 // Mock data
 export * from './lib/mock-data/athletes.mock';
+// Services
+export * from './lib/services/score-bridge.service';

@@ -1,0 +1,170 @@
+<!-- apps/scoreboard/src/app/pages/scoreboard-page/scoreboard-page.component.html -->
+
+<div class="scoreboard">
+
+  <!-- Competition Banner -->
+  @if (competition$ | async; as competition) {
+    <div class="scoreboard__banner">
+      <div class="scoreboard__banner-left">
+        <span class="scoreboard__badge scoreboard__badge--{{ competition.status }}">
+          @if (competition.status === 'live') {
+            <span class="live-dot"></span>
+          }
+          {{ competition.status | uppercase }}
+        </span>
+        <h1 class="scoreboard__competition-name">{{ competition.name }}</h1>
+        <p class="scoreboard__competition-meta">
+          📍 {{ competition.location }} &nbsp;|&nbsp;
+          📅 {{ competition.date | date: 'mediumDate' }}
+        </p>
+      </div>
+      <div class="scoreboard__clock">
+        {{ currentTime() | date: 'HH:mm:ss' }}
+      </div>
+    </div>
+  }
+
+  <!-- Main Grid -->
+  <div class="scoreboard__grid">
+
+    <!-- Leaderboard -->
+    <div class="scoreboard__leaderboard">
+      <h2 class="scoreboard__section-title">🏆 Leaderboard</h2>
+
+      @if (leaderboard$ | async; as entries) {
+        @if (entries.length === 0) {
+          <div class="scoreboard__empty">
+            Waiting for scores from the admin panel...
+          </div>
+        }
+
+        @for (entry of entries; track entry.athlete.id) {
+          <div
+            class="leaderboard-row"
+            [class.leaderboard-row--top3]="entry.rank <= 3"
+            [class.leaderboard-row--selected]="
+              selectedAthlete()?.id === entry.athlete.id
+            "
+            (click)="onSelectAthlete(entry.athlete)"
+          >
+            <!-- Rank -->
+            <span class="leaderboard-row__rank">
+              {{ getRankMedal(entry.rank) }}
+            </span>
+
+            <!-- Athlete info -->
+            <div class="leaderboard-row__info">
+              <span class="leaderboard-row__name">
+                {{ entry.athlete.firstName }} {{ entry.athlete.lastName }}
+              </span>
+              <span class="leaderboard-row__country">
+                {{ entry.athlete.country }} •
+                {{ entry.athlete.category }}
+              </span>
+            </div>
+
+            <!-- Score breakdown -->
+            <div class="leaderboard-row__scores">
+              <span class="leaderboard-row__score-type">
+                E: {{ entry.execution ?? '—' }}
+              </span>
+              <span class="leaderboard-row__score-type">
+                D: {{ entry.difficulty ?? '—' }}
+              </span>
+              <span class="leaderboard-row__score-type">
+                A: {{ entry.artistry ?? '—' }}
+              </span>
+            </div>
+
+            <!-- Average -->
+            <span class="leaderboard-row__average">
+              {{ entry.average | number: '1.2-2' }}
+            </span>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Right panel -->
+    <div class="scoreboard__right">
+
+      <!-- Athlete Profile -->
+      @if (hasSelectedAthlete()) {
+        <div class="athlete-profile">
+          <div class="athlete-profile__header">
+            <div class="athlete-profile__avatar">
+              {{ selectedAthlete()!.firstName[0] }}
+              {{ selectedAthlete()!.lastName[0] }}
+            </div>
+            <div>
+              <h3 class="athlete-profile__name">
+                {{ selectedAthlete()!.firstName }}
+                {{ selectedAthlete()!.lastName }}
+              </h3>
+              <p class="athlete-profile__meta">
+                {{ selectedAthlete()!.country }} •
+                {{ selectedAthlete()!.category }} •
+                {{ selectedAthlete()!.gender }}
+              </p>
+            </div>
+          </div>
+
+          @if (scoreFeed$ | async; as scores) {
+            <div class="athlete-profile__scores">
+              @for (
+                score of getAthleteScores(selectedAthlete()!.id, scores);
+                track score.id
+              ) {
+                <div class="athlete-profile__score-row">
+                  <span class="badge badge--{{ score.type }}">
+                    {{ score.type }}
+                  </span>
+                  <span class="athlete-profile__score-value">
+                    {{ score.value | number: '1.2-2' }}
+                  </span>
+                </div>
+              } @empty {
+                <p class="athlete-profile__no-scores">
+                  No scores submitted yet.
+                </p>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Live Score Feed -->
+      <div class="score-feed">
+        <h2 class="scoreboard__section-title">📡 Live Feed</h2>
+
+        @if (scoreFeed$ | async; as scores) {
+          @if (scores.length === 0) {
+            <p class="scoreboard__empty">No scores yet...</p>
+          }
+
+          @if (athletes$ | async; as athletes) {
+            @for (score of scores; track score.id) {
+              <div class="feed-entry feed-entry--{{ score.type }}">
+                <div class="feed-entry__left">
+                  <span class="feed-entry__name">
+                    {{ getAthleteName(score.athleteId, athletes) }}
+                  </span>
+                  <span class="badge badge--{{ score.type }}">
+                    {{ score.type }}
+                  </span>
+                </div>
+                <div class="feed-entry__right">
+                  <span class="feed-entry__value">{{ score.value }}</span>
+                  <span class="feed-entry__time">
+                    {{ score.submittedAt | date: 'HH:mm:ss' }}
+                  </span>
+                </div>
+              </div>
+            }
+          }
+        }
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+// libs/scoring/feature/src/lib/scoring-shell/scoring-shell.component.scss
+
+.scoring-shell {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  &__live-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #dc2626;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 1.25rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #dc2626;
+  animation: pulse 1s infinite;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+
+  &--success { background: #16a34a; color: #fff; &:hover { background: #15803d; } }
+  &--danger  { background: #dc2626; color: #fff; &:hover { background: #b91c1c; } }
+  &--ghost   { background: transparent; color: #4f46e5; border: 1px solid #c7d2fe; &:hover { background: #e0e7ff; } }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}

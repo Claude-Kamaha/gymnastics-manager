@@ -1,0 +1,80 @@
+// libs/scoring/feature/src/lib/score-leaderboard/score-leaderboard.component.scss
+
+.leaderboard {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+
+  &__empty {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: #f9fafb;
+    transition: background 0.15s;
+
+    &--top { background: #eef2ff; }
+    &:hover { background: #e0e7ff; }
+  }
+
+  &__rank {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #4f46e5;
+    width: 24px;
+    text-align: center;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #111;
+  }
+
+  &__country {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  &__scores {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__average {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #4f46e5;
+  }
+
+  &__latest {
+    font-size: 0.7rem;
+    color: #9ca3af;
+  }
+}

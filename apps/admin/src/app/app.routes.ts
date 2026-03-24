@@ -8,6 +8,13 @@ export const appRoutes: Route[] = [
         (m) => m.AthleteListComponent
       ),
   },
+    {
+    path: 'scoring',
+    loadComponent: () =>
+      import('@gymnastics-manager/scoring-feature').then(
+        (m) => m.ScoringShellComponent
+      ),
+  },
   {
     path: '',
     redirectTo: 'athletes',

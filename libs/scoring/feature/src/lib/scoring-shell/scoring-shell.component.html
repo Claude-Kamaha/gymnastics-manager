@@ -1,0 +1,52 @@
+<!-- libs/scoring/feature/src/lib/scoring-shell/scoring-shell.component.html -->
+
+<div class="scoring-shell">
+
+  <!-- Header -->
+  <div class="scoring-shell__header">
+    <h2 class="scoring-shell__title">Scoring</h2>
+    <div class="scoring-shell__actions">
+      <button
+        class="btn"
+        [class.btn--danger]="isLive()"
+        [class.btn--success]="!isLive()"
+        (click)="onToggleLive()"
+      >
+        {{ isLive() ? '⏹ Stop Live' : '▶ Start Live' }}
+      </button>
+      <button class="btn btn--ghost" (click)="onResetScores()">
+        Reset Scores
+      </button>
+    </div>
+  </div>
+
+  <!-- Live indicator -->
+  @if (isLive()) {
+    <div class="scoring-shell__live-badge">
+      <span class="live-dot"></span> LIVE — scores updating every 3s
+    </div>
+  }
+
+  <!-- Main layout -->
+  <div class="scoring-shell__grid">
+
+    <!-- Submit form -->
+    <lib-gym-score-submit-form
+      [athletes]="(athletes$ | async) ?? []"
+      [isSubmitting]="isSubmitting()"
+      (scoreSubmitted)="onScoreSubmitted($event)"
+    />
+
+    <!-- Leaderboard -->
+    <lib-gym-score-leaderboard
+      [entries]="(leaderboard$ | async) ?? []"
+    />
+
+    <!-- Live feed -->
+    <lib-gym-score-feed
+      [scores]="(scoreFeed$ | async) ?? []"
+      [athletes]="(athletes$ | async) ?? []"
+    />
+
+  </div>
+</div>

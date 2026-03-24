@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { Component, inject } from '@angular/core';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { ScoreBridgeService } from '@gymnastics-manager/shared-util';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [RouterModule,RouterOutlet],
   selector: 'app-root',
+  standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'scoreboard';
+  private bridge = inject(ScoreBridgeService);
+    ngOnInit(): void {
+          console.log('🌉 Scoreboard bridge active, polling localStorage...');
+
+    // Small delay to let BroadcastChannel listener register first
+    // setTimeout(() => this.bridge.requestSync(), 500);
+  }
 }
